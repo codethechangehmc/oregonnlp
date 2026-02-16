@@ -1,0 +1,17 @@
+streamlit
+pandas
+openpyxl
+bertopic
+sentence-transformers<4
+scikit-learn
+umap-learn
+hdbscan
+numpy<2
+torch
+openai
+fpdf2
+pydantic-settings
+python-dotenv
+fastapi
+uvicorn[standard]
+python-multipart
