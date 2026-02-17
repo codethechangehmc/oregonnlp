@@ -4,6 +4,9 @@ import numpy as np
 from bertopic import BERTopic
 from hdbscan import HDBSCAN
 from sentence_transformers import SentenceTransformer
+from umap import UMAP
+from sklearn.feature_extraction.text import CountVectorizer
+from bertopic.representation import KeyBERTInspired, MaximalMarginalRelevance
 
 
 def analyze_topics(
@@ -11,17 +14,51 @@ def analyze_topics(
 ) -> dict:
     """Fit a fresh BERTopic model on docs and return structured results."""
     # Scale min_cluster_size to dataset: at least 3, at most 5% of docs
-    min_cluster = max(3, min(10, len(docs) // 20))
-    hdbscan_model = HDBSCAN(
-        min_cluster_size=min_cluster,
-        min_samples=1,
-        metric="euclidean",
-        prediction_data=True,
+    min_cluster_size=max(3, min(10, len(docs) //20))
+    umap_n_neighbors=15
+    umap_n_components=5
+    nr_topics=10  # Cap the number of topics to 8
+    top_n_words=15  # More words for descriptive labels
+    n_gram_range=(1, 4)
+    umap_model = UMAP(
+        n_neighbors=umap_n_neighbors,
+        n_components=umap_n_components,
+        min_dist=0.0,
+        metric='cosine',        
     )
+    
+    hdbscan_model = HDBSCAN(
+        min_cluster_size=min_cluster_size,
+        metric='euclidean',
+        cluster_selection_method='eom',
+        prediction_data=True
+    )
+    
+    vectorizer_model = CountVectorizer(
+        stop_words="english",
+        ngram_range=n_gram_range,
+        min_df=2
+    )
+        
+    keybert_model = KeyBERTInspired()
+    mmr_model = MaximalMarginalRelevance(diversity=0.3)
+    
+    representation_model = {
+        "KeyBERT": keybert_model,
+        "MMR": mmr_model,
+    }
 
     topic_model = BERTopic(
+        language="english",
+        calculate_probabilities=True,
+        verbose=True,
         embedding_model=embedding_model,
+        umap_model=umap_model,
         hdbscan_model=hdbscan_model,
+        vectorizer_model=vectorizer_model,
+        representation_model=representation_model,
+        nr_topics=nr_topics,
+        top_n_words=top_n_words
     )
     topics, probs = topic_model.fit_transform(docs)
 
