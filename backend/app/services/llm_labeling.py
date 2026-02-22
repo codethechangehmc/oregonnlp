@@ -44,12 +44,12 @@ def _save_cache(db: sqlite3.Connection, kw_hash: str, label: dict):
 def _label_via_openai(keywords: list[str], samples: list[str]) -> dict:
     client = _get_client()
     prompt = (
-        "You are labeling topics from survey responses.\n"
+        "You are labeling topics from survey responses. Produce one clear, coherent theme per topic.\n"
         f"Keywords: {', '.join(keywords)}\n"
         "Sample responses:\n" + "\n".join(f"- {s}" for s in samples[:5]) + "\n\n"
         "Return JSON with exactly these keys:\n"
-        '- "short_name": concise label (max 5 words)\n'
-        '- "description": one sentence describing the topic\n'
+        '- "short_name": one coherent phrase (3–5 words) that reads as a single theme, e.g. "Wild fish and salmon" or "Hatchery programs and ODFW", not a list of words\n'
+        '- "description": one sentence describing what this topic is about\n'
         '- "category": broad category\n'
     )
     resp = client.chat.completions.create(
