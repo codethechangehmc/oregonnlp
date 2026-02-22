@@ -1,4 +1,11 @@
+from pathlib import Path
+
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
+
+# Resolve .env relative to this file (backend/.env), not the working directory
+_ENV_FILE = Path(__file__).parent.parent / ".env"
+load_dotenv(_ENV_FILE)
 
 
 class Settings(BaseSettings):
@@ -7,7 +14,7 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: str = ""
     LLM_PROVIDER: str = "openai"  # "openai" or "local"
     LOCAL_LLM_MODEL: str = "flan-t5"
-    model_config = {"env_file": ".env", "extra": "ignore"}
+    model_config = {"env_file": str(_ENV_FILE), "extra": "ignore"}
 
 
 settings = Settings()
