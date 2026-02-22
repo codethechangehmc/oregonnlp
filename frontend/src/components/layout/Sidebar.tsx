@@ -9,6 +9,7 @@ interface SidebarProps {
   library: LibraryItem[];
   activeId: string | null;
   onSelect: (id: string) => void;
+  onDelete: (id: string) => void;
   loading: boolean;
 }
 
@@ -18,6 +19,7 @@ export default function Sidebar({
   library,
   activeId,
   onSelect,
+  onDelete,
   loading,
 }: SidebarProps) {
   return (
@@ -65,6 +67,7 @@ export default function Sidebar({
                   onSelect(item.id);
                   onClose();
                 }}
+                onDelete={onDelete}
               />
             ))
           )}
