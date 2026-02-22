@@ -16,13 +16,18 @@ router = APIRouter()
 @router.get("/analyses/{analysis_id}/pdf")
 def download_pdf(analysis_id: str, db: sqlite3.Connection = Depends(get_database)):
     """Generate and stream a PDF report for the given analysis."""
-    cursor = db.execute("SELECT results_json FROM analyses WHERE id = ?", (analysis_id,))
+    cursor = db.execute(
+        "SELECT filename, results_json FROM analyses WHERE id = ?", (analysis_id,)
+    )
     row = cursor.fetchone()
     if not row:
         raise HTTPException(status_code=404, detail="Analysis not found")
 
-    analysis = json.loads(row[0])
-    pdf_bytes = generate_pdf(analysis)
+    analysis = json.loads(row["results_json"])
+    try:
+        pdf_bytes = generate_pdf(analysis, filename=row["filename"])
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"PDF generation failed: {e}")
 
     return StreamingResponse(
         io.BytesIO(pdf_bytes),
