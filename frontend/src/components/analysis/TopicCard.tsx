@@ -12,20 +12,26 @@ interface TopicCardProps {
 
 export default function TopicCard({ topic, rank }: TopicCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(5);
+  const visibleResponses = topic.sample_responses.slice(0, visibleCount);
 
   return (
-    <div className={`
-      bg-surface rounded-xl border border-border overflow-hidden
+    <div
+      className={`
+      bg-surface rounded-xl border border-border overflow
       transition-all duration-300
       hover:border-border-bright
       ${expanded ? "shadow-[0_0_30px_var(--color-accent-glow)]" : ""}
-    `}>
+    `}
+    >
       {/* Amber left accent bar */}
       <div className="flex">
-        <div className={`
+        <div
+          className={`
           w-0.5 shrink-0 transition-colors duration-300
           ${expanded ? "bg-accent" : "bg-border-bright"}
-        `} />
+        `}
+        />
 
         <div className="flex-1 min-w-0">
           <button
@@ -45,7 +51,9 @@ export default function TopicCard({ topic, rank }: TopicCardProps) {
                 </span>
               </div>
               {topic.category && (
-                <p className="text-xs text-text-muted/60 mt-0.5 font-body">{topic.category}</p>
+                <p className="text-xs text-text-muted/60 mt-0.5 font-body">
+                  {topic.category}
+                </p>
               )}
             </div>
             <svg
@@ -59,45 +67,64 @@ export default function TopicCard({ topic, rank }: TopicCardProps) {
                 expanded ? "rotate-180" : ""
               }`}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
             </svg>
           </button>
 
           <div
-            className={`overflow-hidden transition-[max-height] duration-400 ease-in-out ${
+            className={`overflow-y-scroll transition-[max-height] duration-400 ease-in-out ${
               expanded ? "max-h-[700px]" : "max-h-0"
             }`}
           >
             <div className="px-5 pb-5 pt-0 border-t border-border">
-              {topic.description && (
-                <p className="text-sm text-text-secondary mt-4 mb-4 leading-relaxed italic font-display">
-                  {topic.description}
-                </p>
-              )}
-
-              {topic.keywords.length > 0 && (
-                <div className="mb-5">
-                  <p className="text-[10px] font-semibold text-text-muted uppercase tracking-[0.15em] font-body mb-2.5">
-                    Keywords
+              <div className="sticky top-0 bg-surface z-10 py-2">
+                {topic.description && (
+                  <p className="text-sm text-text-secondary mt-4 mb-4 leading-relaxed italic font-display">
+                    {topic.description}
                   </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {topic.keywords.filter(Boolean).map((kw, i) => (
-                      <KeywordBadge key={`${i}-${kw}`} keyword={kw} />
-                    ))}
-                  </div>
-                </div>
-              )}
+                )}
 
-              {topic.sample_responses.length > 0 && (
-                <div>
+                {topic.keywords.length > 0 && (
+                  <div className="mb-5">
+                    <p className="text-[10px] font-semibold text-text-muted uppercase tracking-[0.15em] font-body mb-2.5">
+                      Keywords
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {topic.keywords.filter(Boolean).map((kw, i) => (
+                        <KeywordBadge key={`${i}-${kw}`} keyword={kw} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {topic.sample_responses.length > 0 && (
                   <p className="text-[10px] font-semibold text-text-muted uppercase tracking-[0.15em] font-body mb-2">
                     Sample Responses
                   </p>
-                  <ul>
-                    {topic.sample_responses.slice(0, 5).map((resp, i) => (
+                )}
+              </div>
+
+              {topic.sample_responses.length > 0 && (
+                <div className="py-2 w-full flex flex-col justify-items-center items-center align-middle text-wrap gap-2">
+                  <ul className="overflow-hidden h-[10%] w-full">
+                    {visibleResponses.map((resp, i) => (
                       <SampleResponse key={i} text={resp} />
                     ))}
                   </ul>
+                  
+                  <p className='text-xs text-text-secondary'>Viewing {visibleCount} of {topic.sample_responses.length} Sample Responses</p>
+                  {visibleCount < topic.sample_responses.length && (
+                    <button
+                      onClick={() => setVisibleCount((c) => c + 20)}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium font-body transition-all duration-200 active:scale-[0.97] bg-surface hover:bg-surface-hover text-text-secondary hover:text-text-primary border border-border hover:border-border-bright cursor-pointe"
+                    >
+                      Load More
+                    </button>
+                  )}
                 </div>
               )}
             </div>
