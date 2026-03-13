@@ -54,3 +54,7 @@ export async function removeFromLibrary(id: string): Promise<void> {
 export function getPdfUrl(id: string): string {
   return `/api/analyses/${id}/pdf`;
 }
+
+export function getCsvUrl(id: string): string {
+  return `/api/analyses/${id}/csv`;
+}

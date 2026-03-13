@@ -28,6 +28,7 @@ def download_pdf(analysis_id: str, db: sqlite3.Connection = Depends(get_database
         io.BytesIO(pdf_bytes),
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename=analysis_{analysis_id[:8]}.pdf"},
+    )
 
 
 @router.get("/analyses/{analysis_id}/csv")
