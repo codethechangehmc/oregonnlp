@@ -13,7 +13,8 @@ class Settings(BaseSettings):
     DATABASE_PATH: str = "./data/app.db"
     AZURE_OPENAI_API_KEY: str = ""
     AZURE_OPENAI_ENDPOINT: str = ""
-    OPENAI_API_VERSION: str = ""
+    AZURE_OPENAI_API_VERSION: str = ""
+    AZURE_OPENAI_DEPLOYMENT: str = ""
     LLM_PROVIDER: str = "openai"  # "openai" or "local"
     LOCAL_LLM_MODEL: str = "flan-t5"
     model_config = {"env_file": str(_ENV_FILE), "extra": "ignore"}
