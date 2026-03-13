@@ -46,6 +46,16 @@ export default function Home() {
     analysis.reset();
   }, [analysis]);
 
+  const handleDelete = useCallback(
+    async (id: string) => {
+      await library.remove(id);
+      if (analysis.data?.analysis_id === id) {
+        analysis.reset();
+      }
+    },
+    [library, analysis]
+  );
+
   return (
     <div className="h-screen flex flex-col">
       <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
@@ -57,6 +67,7 @@ export default function Home() {
           library={library.items}
           activeId={analysis.data?.analysis_id ?? null}
           onSelect={handleLibrarySelect}
+          onDelete={handleDelete}
           loading={library.loading}
         />
 
