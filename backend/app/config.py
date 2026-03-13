@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     AZURE_OPENAI_ENDPOINT: str = ""
     AZURE_OPENAI_API_VERSION: str = ""
     AZURE_OPENAI_DEPLOYMENT: str = ""
-    LLM_PROVIDER: str = "openai"  # "openai" or "local"
+    LLM_PROVIDER: str = "azure_openai" 
     LOCAL_LLM_MODEL: str = "flan-t5"
     model_config = {"env_file": str(_ENV_FILE), "extra": "ignore"}
 
