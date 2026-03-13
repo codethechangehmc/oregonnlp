@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Models (large binary files)
+models/
+
+# Backend data
+backend/data/
+
+# Node
+node_modules/
+.next/
+frontend/.next/
+frontend/node_modules/
+
+# Environment
+.env
+.env.local
+backend/.env
+
+# OS
+.DS_Store
