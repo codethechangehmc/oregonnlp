@@ -4,17 +4,19 @@ import hashlib
 import json
 import sqlite3
 
-from openai import OpenAI
+from openai import AzureOpenAI
 
 from ..config import settings
 
-_client: OpenAI | None = None
+_client: AzureOpenAI | None = None
 
 
-def _get_client() -> OpenAI:
+def _get_client() -> AzureOpenAI:
     global _client
     if _client is None:
-        _client = OpenAI(api_key=settings.OPENAI_API_KEY)
+        _client = AzureOpenAI(azure_endpoint = settings.AZURE_OPENAI_ENDPOINT, 
+        api_key=settings.AZURE_OPENAI_API_KEY, api_version=settings.AZURE_OPENAI_API_VERSION,
+        azure_deployment=settings.AZURE_OPENAI_DEPLOYMENT)
     return _client
 
 
@@ -83,7 +85,7 @@ def label_topics(topic_results: list[dict], db: sqlite3.Connection) -> list[dict
         cached = _check_cache(db, kw_hash)
         if cached:
             label_data = cached
-        elif settings.LLM_PROVIDER == "openai" and settings.OPENAI_API_KEY:
+        elif settings.LLM_PROVIDER == "azure_openai" and settings.AZURE_OPENAI_API_KEY and settings.AZURE_OPENAI_ENDPOINT:
             try:
                 label_data = _label_via_openai(keywords, topic["sample_responses"])
                 _save_cache(db, kw_hash, label_data)
