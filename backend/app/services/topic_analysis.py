@@ -111,7 +111,7 @@ def analyze_topics(
         count = len(indices)
         topic_words = topic_model.get_topic(tid) if tid != -1 else None
         keywords = _dedupe_keywords(topic_words, max_words=10)
-        samples = [docs[i] for i in indices[:5]]
+        samples = [docs[i] for i in indices[:]]
 
         topic_results.append({
             "topic_id": int(tid),
