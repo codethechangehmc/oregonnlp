@@ -15,8 +15,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Oregon NLP Survey Analyzer",
-  description: "AI-powered survey topic analysis",
+  title: "EchoAnalyst",
+  description: "Survey Response Summarizer",
 };
 
 export default function RootLayout({
