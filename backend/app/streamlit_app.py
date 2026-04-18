@@ -240,5 +240,5 @@ if data:
     # Outlier section
     if outlier and outlier["count"] > 0:
         with st.expander(f"**Unclassified** — {outlier['count']} responses ({outlier['percentage']}%)"):
-            for resp in outlier.get("sample_responses", [])[:5]:
+            for resp in outlier.get("sample_responses", [])[:]:
                 st.markdown(f"- {resp}")
