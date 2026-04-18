@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
 import DropZone from "@/components/upload/DropZone";
@@ -18,6 +18,12 @@ export default function Home() {
 
   const library = useLibrary();
   const analysis = useAnalysis();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    if (isDesktop) setSidebarOpen(true);
+  }, []);
 
   const handleFileSelect = useCallback((file: File) => {
     setSelectedFile(file);
@@ -63,6 +69,7 @@ export default function Home() {
       <div className="flex flex-1 overflow-hidden">
         <Sidebar
           open={sidebarOpen}
+          onToggle={() => setSidebarOpen((v) => !v)}
           onClose={() => setSidebarOpen(false)}
           library={library.items}
           activeId={analysis.data?.analysis_id ?? null}
