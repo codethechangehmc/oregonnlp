@@ -20,8 +20,7 @@ export default function Header({ onToggleSidebar }: HeaderProps) {
       <div className="flex items-center gap-2.5">
         <div className="w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_var(--color-accent-glow)]" />
         <h1 className="text-[15px] tracking-tight">
-          <span className="font-display italic font-medium text-text-primary">Oregon NLP</span>
-          <span className="text-text-muted font-body ml-1.5 font-light">Survey Analyzer</span>
+          <span className="font-display font-medium text-text-primary">Survey Analyzer</span>
         </h1>
       </div>
 
