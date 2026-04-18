@@ -18,7 +18,7 @@ export default function TopicCard({ topic, rank }: TopicCardProps) {
   return (
     <div
       className={`
-      bg-surface rounded-xl border border-border overflow
+      bg-surface rounded-tr-xl rounded-br-xl border border-border overflow
       transition-all duration-300
       hover:border-border-bright
       ${expanded ? "shadow-[0_0_30px_var(--color-accent-glow)]" : ""}

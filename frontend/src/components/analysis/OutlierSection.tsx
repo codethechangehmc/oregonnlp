@@ -10,7 +10,10 @@ interface OutlierSectionProps {
 
 export default function OutlierSection({ outlier }: OutlierSectionProps) {
   const [expanded, setExpanded] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(5);
+  const visibleResponses = outlier.sample_responses.slice(0, visibleCount);
 
+  console.log(outlier)
   if (outlier.count === 0) return null;
 
   return (
@@ -43,17 +46,29 @@ export default function OutlierSection({ outlier }: OutlierSectionProps) {
       </button>
 
       <div
-        className={`overflow-hidden transition-[max-height] duration-300 ease-in-out ${
-          expanded ? "max-h-[400px]" : "max-h-0"
+        className={`transition-[max-height] duration-300 ease-in-out ${
+          expanded ? " overflow-scroll max-h-[500px]" : "max-h-0"
         }`}
       >
-        <div className="px-5 pb-5 border-t border-border pt-3">
-          <ul>
-            {outlier.sample_responses.slice(0, 5).map((resp, i) => (
-              <SampleResponse key={i} text={resp} />
-            ))}
-          </ul>
-        </div>
+        {outlier.sample_responses.length > 0 && (
+            <div className="px-2 py-2 w-full flex flex-col justify-items-center items-center align-middle text-wrap gap-2">
+              <ul className="h-[10%] w-full">
+                {visibleResponses.map((resp, i) => (
+                  <SampleResponse key={i} text={resp} />
+                ))}
+              </ul>
+              
+              <p className='text-xs text-text-secondary'>Viewing {visibleCount} of {outlier.sample_responses.length} Sample Responses</p>
+              {visibleCount < outlier.sample_responses.length && (
+                <button
+                  onClick={() => setVisibleCount((c) => c + 20)}
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium font-body transition-all duration-200 active:scale-[0.97] bg-surface hover:bg-surface-hover text-text-secondary hover:text-text-primary border border-border hover:border-border-bright cursor-pointe"
+                >
+                  Load More
+                </button>
+              )}
+            </div>
+          )}
       </div>
     </div>
   );
